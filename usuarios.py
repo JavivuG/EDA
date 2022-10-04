@@ -1,13 +1,12 @@
+import math
+
 class Usuario():
-    all=[]
     def __init__(self,id,x,y,grupo,vecinos):
             self.id=id
             self.x=x
             self.y=y
             self.grupo=grupo
             self.vecinos=vecinos
-
-            Usuario.all.append(self)
 
     def recogerUsuarios(ficheroInicial): # Extrae los datos de los usuarios en el punto inicial
         fichero = open(ficheroInicial,'r')
@@ -41,17 +40,16 @@ class Usuario():
                 self.x=datos[i][1] # Actualizo la posicion x
                 self.y=datos[i][2] # Actualizo la posicion y
 
-    
+
     # Esto todavia no esta implementado pero deberia funcionar
-    """def recogerVecinos(nombreFichero): # Recoger vecinos despues de movimientos
-        usuarios=recogerUsuarios(nombreFichero)
+    def recogerVecinos(self,usuarios): # Recoger vecinos despues de movimientos
         vecinos=[]
         for i in range(len(usuarios)):
-            for j in range(len(usuarios)):
-                if (usuarios[i]!=usuarios[j]):
-                    distancia=Math.sqrt((usuarios[i].x-usuario[j].x)**2+(usuarios[i].y-usuario[j].y)**2)
-                    if distancia=<2:
-                        vecinos.append(usuario[j])
-        return vecinos"""
+            if (self.id!=usuarios[i].id):
+                distancia=math.sqrt(((float)(self.x)-(float)(usuarios[i].x))**2+((float)(self.y)-(float)(usuarios[i].y))**2)
+                if (distancia<=2.0):
+                    vecinos.append(usuarios[i].id)
+                    
+        self.vecinos=vecinos
 
 
