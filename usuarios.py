@@ -9,7 +9,7 @@ class Usuario():
             self.vecinos=vecinos
 
     def recogerUsuarios(ficheroInicial): # Extrae los datos de los usuarios en el punto inicial
-        fichero = open(ficheroInicial,'r')
+        fichero = open("./ficheros/"+ficheroInicial,'r')
         lineas = fichero.readlines()
         datos=[]
         for i in range(len(lineas)):
@@ -29,7 +29,7 @@ class Usuario():
 
     # Actualiza la posicion x e y de los usuarios segun el fichero de movimientos
     def movimientos(self,ficheroMovimientos,usuarios): 
-        fichero = open(ficheroMovimientos,'r')
+        fichero = open("./ficheros/"+ficheroMovimientos,'r')
         lineas = fichero.readlines()
 
         datos=[]
@@ -58,6 +58,38 @@ class Usuario():
         for i in range(len(self.vecinos)):
             copiaVecinos.append(self.vecinos[i])
         return copiaVecinos
+
+    def generaMensajes(self,usuarios,vecinos, vecinosCambio):
+        mensajes=[]
+        for i in range(len(vecinos)):
+            if(vecinos[i] not in vecinosCambio):
+                mensajes.append(self.id+"-"+vecinos[i])
+                mensajes.append(vecinos[i]+"-"+self.id)
+            mensajes.append("---")
+
+        for i in range(len(vecinosCambio)):
+            if (vecinosCambio[i] not in vecinos):
+                if (self.compruebaGrupo(usuarios, vecinosCambio[i])):
+                    mensajes.append(self.id+"+="+vecinosCambio[i])
+                    mensajes.append(vecinosCambio[i]+"+="+self.id)
+                else:
+                    mensajes.append(self.id+"+/"+vecinosCambio[i])
+                    mensajes.append(vecinosCambio[i]+"+/"+self.id)
+            mensajes.append("---")
         
+        self.vecinos=vecinosCambio
+        return mensajes
+
+    def compruebaGrupo(self, usuarios,vecino): #Comprueba si son del mismo grupo
+        for i in range(len(usuarios)):
+            if (usuarios[i].id==vecino):
+                if (usuarios[i].grupo==self.grupo):
+                    return True
+                else:
+                    return False
+    
+    def imprimeMensajes(mensajes):
+        for i in range(len(mensajes)):
+            print(mensajes[i])
 
 
