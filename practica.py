@@ -6,6 +6,10 @@ def hallaParametros(ficheroEstado):
     
     print("Parametros: n = "+ficheroEstado[1]+", d = "+ ficheroEstado[2])
 
+def imprimeMensajes(mensajes):
+    for i in range(len(mensajes)):
+        print(mensajes[i])
+
 if __name__=="__main__":
     print("PRACTICA EDA 2022-2023")
 
@@ -13,14 +17,14 @@ if __name__=="__main__":
     ficheroEstado=input("Fichero de estado: ")
     hallaParametros(ficheroEstado)
 
+    # Lista de objeto usuario
+    usuarios=Usuario.recogerUsuarios(ficheroEstado)
+
     modo=input("Modo [D]epuracion o [M]edicion? ")
 
-    if (modo=="D"):
+    if (modo.upper()=="D"):
         ficheroMovimientos=input("Fichero de movimientos: ")
         print("Procesando...")
-
-        # Lista de objeto usuario
-        usuarios=Usuario.recogerUsuarios(ficheroEstado)
         
         vecinos=[]
         vecinosCambio=[]
@@ -33,13 +37,33 @@ if __name__=="__main__":
 
             # Compruebo diferencias entre vecinos despues de cambio y vecinos
             mensajes=Usuario.generaMensajes(usuarios[i], usuarios, vecinos, vecinosCambio)
-            Usuario.imprimeMensajes(mensajes)
+            imprimeMensajes(mensajes)
 
         final=time.time()
         diferenciaTiempo=final-comienzo
-        print("Tiempo: %.5f segundos" % diferenciaTiempo)
+        print("Tiempo: %.5f seg." % diferenciaTiempo)
 
+    elif (modo.upper()=="M"):
+        sumaTiempo=0
+        ciclos=(int)(input("Numero de ciclos: "))
+        print("Procesando...")
+        
+        # Repito las medidas las veces que me indica
+        for iteracion in range(ciclos):
+            comienzo=time.time()
+
+            for i in range(len(usuarios)): # Recorro la lista con los usuarios
+                Usuario.medicionMovimientos(usuarios[i]) # Actualizo las coordenadas x e y con un numero aleatorio entre -0.5 y 0.5 
+                Usuario.cambiarVecinos(usuarios[i],usuarios) # Actualizo los vecinos segun los movimientos generados
+            final=time.time()
+
+            diferenciaTiempo=final-comienzo
+            print("%.5f" % diferenciaTiempo) # Muestro el tiempo tardado
+            sumaTiempo+=diferenciaTiempo 
+
+        promedio=sumaTiempo/ciclos 
+        print("Promedio: %.5f" % promedio) # Muestro el promedio de tiempo tardado
     else:
-        pass
+        print("OPCION ERRONEA")
 
     

@@ -1,4 +1,5 @@
 import math
+import random
 
 class Usuario():
     def __init__(self,id,x,y,grupo,vecinos):
@@ -59,25 +60,26 @@ class Usuario():
             copiaVecinos.append(self.vecinos[i])
         return copiaVecinos
 
-    def generaMensajes(self,usuarios,vecinos, vecinosCambio):
+    def generaMensajes(self,usuarios,vecinos, vecinosCambio): # Genero los mensajes dependiendo comparando las listas de vecinos antes y despues del movimiento
         mensajes=[]
-        for i in range(len(vecinos)):
-            if(vecinos[i] not in vecinosCambio):
+        seleccionado=[]
+        for i in range(len(vecinos)): # Recorro la lista de vecinos antes del moviento
+            if ((vecinos[i] not in vecinosCambio) and (vecinos[i] not in seleccionado)): # En el caso de que se haya salido de la zona cercana del usuario
                 mensajes.append(self.id+"-"+vecinos[i])
                 mensajes.append(vecinos[i]+"-"+self.id)
-            mensajes.append("---")
-
-        for i in range(len(vecinosCambio)):
-            if (vecinosCambio[i] not in vecinos):
-                if (self.compruebaGrupo(usuarios, vecinosCambio[i])):
+                seleccionado.append(vecinos[i])
+            
+        for i in range(len(vecinosCambio)): # Recorro la lista de vecinos despues del moviento
+            if ((vecinosCambio[i] not in vecinos) and (vecinosCambio[i] not in seleccionado)): # Se ha metido en la zona cercana
+                if (self.compruebaGrupo(usuarios, vecinosCambio[i])): # Mismo grupo
                     mensajes.append(self.id+"+="+vecinosCambio[i])
                     mensajes.append(vecinosCambio[i]+"+="+self.id)
-                else:
+                else: # Distinto grupo
                     mensajes.append(self.id+"+/"+vecinosCambio[i])
                     mensajes.append(vecinosCambio[i]+"+/"+self.id)
-            mensajes.append("---")
-        
-        self.vecinos=vecinosCambio
+                seleccionado.append(vecinosCambio[i])   
+            
+        mensajes.append("---") 
         return mensajes
 
     def compruebaGrupo(self, usuarios,vecino): #Comprueba si son del mismo grupo
@@ -88,8 +90,11 @@ class Usuario():
                 else:
                     return False
     
-    def imprimeMensajes(mensajes):
-        for i in range(len(mensajes)):
-            print(mensajes[i])
+    def medicionMovimientos(self): # Actualizo la posicion del usuario con coordenadas entre -0.5 y 0.5 para la medicion
+        x = random.uniform(-0.5,0.5)
+        y = random.uniform(-0.5,0.5)
+
+        self.x=x
+        self.y=y
 
 
