@@ -27,7 +27,8 @@ class Usuario():
                 
         return usuarios
 
-    def movimientos(self,ficheroMovimientos): # Funciona
+    # Actualiza la posicion x e y de los usuarios segun el fichero de movimientos
+    def movimientos(self,ficheroMovimientos,usuarios): 
         fichero = open(ficheroMovimientos,'r')
         lineas = fichero.readlines()
 
@@ -39,10 +40,9 @@ class Usuario():
             if (self.id==datos[i][0]):
                 self.x=datos[i][1] # Actualizo la posicion x
                 self.y=datos[i][2] # Actualizo la posicion y
+        self.cambiarVecinos(usuarios)
 
-
-    # Esto todavia no esta implementado pero deberia funcionar
-    def recogerVecinos(self,usuarios): # Recoger vecinos despues de movimientos
+    def cambiarVecinos(self,usuarios): # Cambiar vecinos despues de movimientos
         vecinos=[]
         for i in range(len(usuarios)):
             if (self.id!=usuarios[i].id):
@@ -51,5 +51,13 @@ class Usuario():
                     vecinos.append(usuarios[i].id)
                     
         self.vecinos=vecinos
+
+    # Realiza una copia de los vecinos de un usuario
+    def copiaVecinos(self):
+        copiaVecinos=[]
+        for i in range(len(self.vecinos)):
+            copiaVecinos.append(self.vecinos[i])
+        return copiaVecinos
+        
 
 

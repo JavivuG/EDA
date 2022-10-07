@@ -25,18 +25,24 @@ def imprimirVecinos(usuarios):
     for i in range(len(usuarios)):
         print(usuarios[i].vecinos)
 
+def listaVecinos(usuarios):
+    vecinos=[]
+    for i in range(len(usuarios)):
+        vecinos.append(usuarios[i].vecinos)
+    return vecinos
+
 if __name__=="__main__":
+    
     parametros=pedirNumeroDensidad()
     ficheroInicial="inicial_"+parametros[0]+"_"+parametros[1]+"_.txt"
     ficheroMovimientos="movs_"+parametros[0]+"_"+parametros[1]+"_.txt"
 
     usuarios=Usuario.recogerUsuarios(ficheroInicial)
-    imprimirVecinos(usuarios)
+    
+    vecinos=[]
+    vecinosCambio=[]
     for i in range(len(usuarios)):
-        Usuario.movimientos(usuarios[i],ficheroMovimientos)
-
-    print()
-    for i in range(len(usuarios)):
-        Usuario.recogerVecinos(usuarios[i],usuarios)
-    imprimirVecinos(usuarios)
-
+        vecinos=Usuario.copiaVecinos(usuarios[i]) # Contiene los vecinos antes del movimiento 
+        Usuario.movimientos(usuarios[i],ficheroMovimientos, usuarios)
+        vecinosCambio=Usuario.copiaVecinos(usuarios[i]) # Contiene los vecinos despues del movimiento
+    print(vecinosCambio)
