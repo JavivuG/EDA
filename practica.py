@@ -6,9 +6,21 @@ def hallaParametros(ficheroEstado):
     
     print("Parametros: n = "+ficheroEstado[1]+", d = "+ ficheroEstado[2])
 
+def compruebaMensaje(mensaje,mensajesYaImpresos):
+    for i in range(len(mensajesYaImpresos)):
+        if (mensaje==mensajesYaImpresos[i]):
+            return False
+    return True
+
 def imprimeMensajes(mensajes):
+    mensajesYaImpresos=[]
     for i in range(len(mensajes)):
-        print(mensajes[i])
+        if (mensajes[i]!="---"):
+            if (compruebaMensaje(mensajes[i], mensajesYaImpresos)):
+                print(mensajes[i])
+                mensajesYaImpresos.append(mensajes[i])
+        else:
+            print(mensajes[i])
 
 if __name__=="__main__":
     print("PRACTICA EDA 2022-2023")
@@ -28,7 +40,7 @@ if __name__=="__main__":
         
         vecinos=[]
         vecinosCambio=[]
-        mensajes=[]
+        aux=[]
         comienzo=time.time()
 
         for i in range(len(usuarios)):
@@ -37,8 +49,11 @@ if __name__=="__main__":
             vecinosCambio=Usuario.copiaVecinos(usuarios[i]) # Contiene los vecinos despues del movimiento
 
             # Compruebo diferencias entre vecinos despues de cambio y vecinos
-            mensajes=Usuario.generaMensajes(usuarios[i], usuarios, vecinos, vecinosCambio, mensajes)
-            imprimeMensajes(mensajes)
+            mensajes=Usuario.generaMensajes(usuarios[i], usuarios, vecinos, vecinosCambio)
+            for i in range(len(mensajes)):
+                aux.append(mensajes[i])
+
+        imprimeMensajes(aux)  
 
         final=time.time()
         diferenciaTiempo=final-comienzo

@@ -60,29 +60,41 @@ class Usuario():
             copiaVecinos.append(self.vecinos[i])
         return copiaVecinos
 
-    def generaMensajes(self,usuarios,vecinos, vecinosCambio, mensajes): # Genero los mensajes dependiendo comparando las listas de vecinos antes y despues del movimiento
-        seleccionado=[]
+    def generaMensajes(self,usuarios,vecinos, vecinosCambio): # Genero los mensajes dependiendo comparando las listas de vecinos antes y despues del movimiento
+        mensajes=[]
         for i in range(len(vecinos)): # Recorro la lista de vecinos antes del moviento
-            mensajeCorrespondiente=self.id+"-"+vecinos[i]
-            if ((vecinos[i] not in vecinosCambio) and (mensajeCorrespondiente not in mensajes)): # En el caso de que se haya salido de la zona cercana del usuario
+            if ((vecinos[i] not in vecinosCambio)): # En el caso de que se haya salido de la zona cercana del usuario
                 mensajes.append(self.id+"-"+vecinos[i])
                 mensajes.append(vecinos[i]+"-"+self.id)
-                seleccionado.append(vecinos[i])
-            
+                self.quitarVecino(usuarios,vecinos[i])
         for i in range(len(vecinosCambio)): # Recorro la lista de vecinos despues del moviento
             if ((vecinosCambio[i] not in vecinos)): # Se ha metido en la zona cercana
-                mensajeCorrespondiente1=self.id+"+="+vecinosCambio[i]
-                mensajeCorrespondiente2=self.id+"+/"+vecinosCambio[i]
-                if (self.compruebaGrupo(usuarios, vecinosCambio[i]) and (mensajeCorrespondiente1 not in mensajes)): # Mismo grupo
+
+                if (self.compruebaGrupo(usuarios, vecinosCambio[i]) ): # Mismo grupo
                     mensajes.append(self.id+"+="+vecinosCambio[i])
                     mensajes.append(vecinosCambio[i]+"+="+self.id)
-                elif ((mensajeCorrespondiente not in mensajes)): # Distinto grupo
+                else: # Distinto grupo
                     mensajes.append(self.id+"+/"+vecinosCambio[i])
                     mensajes.append(vecinosCambio[i]+"+/"+self.id)
-                seleccionado.append(vecinosCambio[i])   
-            
+
         mensajes.append("---") 
         return mensajes
+
+    def quitarVecino(self, usuarios, vecino):
+        usuariosId=[]
+        for i in range(len(usuarios)):
+            usuariosId.append(usuarios[i].id)
+
+        posicion=(usuariosId).index(vecino)
+        (usuarios[posicion].vecinos).remove(self.id)
+
+    def addVecino(self, usuarios, vecino):
+        usuariosId=[]
+        for i in range(len(usuarios)):
+            usuariosId.append(usuarios[i].id)
+
+        posicion=(usuariosId).index(vecino)
+        (usuarios[posicion].vecinos).append(self.id)
 
     def compruebaGrupo(self, usuarios,vecino): #Comprueba si son del mismo grupo
         for i in range(len(usuarios)):
