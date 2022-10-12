@@ -1,26 +1,27 @@
 from usuarios import Usuario
 import time
 
-def hallaParametros(ficheroEstado):
+
+def hallaParametros(ficheroEstado): # Hallo los parametros a partir del fichero de Estado introducido
     ficheroEstado=ficheroEstado.split("_")
     
     print("Parametros: n = "+ficheroEstado[1]+", d = "+ ficheroEstado[2])
 
-def compruebaMensaje(mensaje,mensajesYaImpresos):
-    for i in range(len(mensajesYaImpresos)):
-        if (mensaje==mensajesYaImpresos[i]):
-            return False
-    return True
-
-def imprimeMensajes(mensajes):
+def imprimeMensajes(mensajes): # Imrpime por pantalla los mensajes generados
     mensajesYaImpresos=[]
     for i in range(len(mensajes)):
         if (mensajes[i]!="---"):
-            if (compruebaMensaje(mensajes[i], mensajesYaImpresos)):
+            if (compruebaMensaje(mensajes[i], mensajesYaImpresos)): # Evito que se repitan los mismos mensajes
                 print(mensajes[i])
                 mensajesYaImpresos.append(mensajes[i])
         else:
             print(mensajes[i])
+
+def compruebaMensaje(mensaje,mensajesYaImpresos): # Compruebo que le mensaje se halla imprimido o no
+    for i in range(len(mensajesYaImpresos)):
+        if (mensaje==mensajesYaImpresos[i]):
+            return False
+    return True
 
 if __name__=="__main__":
     print("PRACTICA EDA 2022-2023")
@@ -40,20 +41,21 @@ if __name__=="__main__":
         
         vecinos=[]
         vecinosCambio=[]
-        aux=[]
+        todosMensajes=[]
         comienzo=time.time()
 
         for i in range(len(usuarios)):
             vecinos=Usuario.copiaVecinos(usuarios[i]) # Contiene los vecinos antes del movimiento 
             Usuario.movimientos(usuarios[i],ficheroMovimientos, usuarios)
             vecinosCambio=Usuario.copiaVecinos(usuarios[i]) # Contiene los vecinos despues del movimiento
-
+            
             # Compruebo diferencias entre vecinos despues de cambio y vecinos
             mensajes=Usuario.generaMensajes(usuarios[i], usuarios, vecinos, vecinosCambio)
-            for i in range(len(mensajes)):
-                aux.append(mensajes[i])
+            
+            for j in range(len(mensajes)):
+                todosMensajes.append(mensajes[j])
 
-        imprimeMensajes(aux)  
+        imprimeMensajes(todosMensajes)  
 
         final=time.time()
         diferenciaTiempo=final-comienzo

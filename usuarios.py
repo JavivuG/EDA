@@ -1,6 +1,7 @@
 import math
 import random
 
+
 class Usuario():
     def __init__(self,id,x,y,grupo,vecinos):
             self.id=id
@@ -76,7 +77,7 @@ class Usuario():
                 else: # Distinto grupo
                     mensajes.append(self.id+"+/"+vecinosCambio[i])
                     mensajes.append(vecinosCambio[i]+"+/"+self.id)
-
+                self.addVecino(usuarios, vecinosCambio[i])
         mensajes.append("---") 
         return mensajes
 
