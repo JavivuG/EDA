@@ -61,7 +61,7 @@ class Usuario():
             if ((vecinos[i] not in vecinosCambio)): # Si antes estaba y ya no entonces se ha ido
                 mensajes.append(self.id+"-"+vecinos[i])
                 mensajes.append(vecinos[i]+"-"+self.id)
-                #self.quitarVecino(usuarios,vecinos[i]) # NO FUNCION
+                self.quitarVecino(usuarios,vecinos[i]) 
 
         for i in range(len(vecinosCambio)): # Recorro la lista de vecinos despues del moviento
             if ((vecinosCambio[i] not in vecinos)): # Se ha metido en la zona cercana
@@ -71,7 +71,7 @@ class Usuario():
                 else: # Distinto grupo
                     mensajes.append(self.id+"+/"+vecinosCambio[i])
                     mensajes.append(vecinosCambio[i]+"+/"+self.id)
-                #self.addVecino(usuarios, vecinosCambio[i]) # NO FUNCIONA
+                self.addVecino(usuarios, vecinosCambio[i])
         mensajes.append("---") 
         return mensajes
 
@@ -80,14 +80,17 @@ class Usuario():
             if (usuarios[i].id==vecino): # Selecciono el objeto usuario del vecino
                 vecinos=usuarios[i].vecinos # Lista de vecinos
                 if (self.compruebaVecinos(vecinos)):
-                    usuarios[i].vecinos=vecinos.remove(self.id)
+                    vecinos.remove(self.id)
+                    usuarios[i].vecinos=vecinos
 
     def addVecino(self, usuarios, vecino):
         for i in range(len(usuarios)):
             if (usuarios[i].id==vecino):
                 vecinos=usuarios[i].vecinos
-                if (not self.compruebaVecinos(vecinos)):
-                    usuarios[i].vecinos=vecinos.append(self.id)
+                if (self.id not in vecinos):
+                    vecinos.append(self.id)
+                    usuarios[i].vecinos=vecinos
+
 
     def compruebaVecinos(self, vecinos):
         for i in range(len(vecinos)):
