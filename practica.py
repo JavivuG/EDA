@@ -23,6 +23,27 @@ def compruebaMensaje(mensaje,mensajesYaImpresos): # Compruebo que le mensaje se 
             return False
     return True
 
+
+def usuariosFicheroMoviemientos(ficheroMovimientos): # Devuelvo la lista de nombres de usuarios ordenados segun el fichero de movimientos
+    usuarios=[]
+    fichero = open("./ficheros/"+ficheroMovimientos,'r')
+    lineas = fichero.readlines()
+    datos=[]
+    for i in range(len(lineas)):
+        datos.append(lineas[i].split())
+        usuarios.append(datos[i][0])
+    return usuarios
+
+def ordenarPorMovimientos(usuarios, ficheroMovimientos): # Ordeno la lista de objetos usuario por orden de apariencia en el fichero de movimientos
+    usuariosPorMovimientos=usuariosFicheroMoviemientos(ficheroMovimientos) # Lista de nombres de usuario
+    usuariosOrdenados=[] # Lista de objetos usuario
+
+    for i in range(len(usuariosPorMovimientos)):
+        for j in range(len(usuarios)):
+            if (usuariosPorMovimientos[i]==usuarios[j].id):
+                usuariosOrdenados.append(usuarios[j])
+    return usuariosOrdenados
+
 if __name__=="__main__":
     print("PRACTICA EDA 2022-2023")
 
@@ -44,8 +65,9 @@ if __name__=="__main__":
         todosMensajes=[]
         comienzo=time.time()
 
+        usuarios=ordenarPorMovimientos(usuarios, ficheroMovimientos)
+        
         for i in range(len(usuarios)):
-            
             vecinos=usuarios[i].vecinos # Contiene los vecinos antes del movimiento 
             Usuario.movimientos(usuarios[i],ficheroMovimientos, usuarios)
             vecinosCambio=usuarios[i].vecinos # Contiene los vecinos despues del movimiento
@@ -84,5 +106,3 @@ if __name__=="__main__":
         print("Promedio: %.5f" % promedio) # Muestro el promedio de tiempo tardado
     else:
         print("OPCION ERRONEA")
-
-    

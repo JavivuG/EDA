@@ -51,9 +51,7 @@ class Usuario():
                 distancia=math.sqrt(((float)(self.x)-(float)(usuarios[i].x))**2+((float)(self.y)-(float)(usuarios[i].y))**2)
                 if (distancia<=2.0):
                     vecinos.append(usuarios[i].id)
-                    
         self.vecinos=vecinos
-
 
     def generaMensajes(self,usuarios,vecinos, vecinosCambio): # Genero los mensajes dependiendo comparando las listas de vecinos antes y despues del movimiento
         mensajes=[]
@@ -79,7 +77,7 @@ class Usuario():
         for i in range(len(usuarios)): 
             if (usuarios[i].id==vecino): # Selecciono el objeto usuario del vecino
                 vecinos=usuarios[i].vecinos # Lista de vecinos
-                if (self.compruebaVecinos(vecinos)):
+                if (self.id in vecinos):
                     vecinos.remove(self.id)
                     usuarios[i].vecinos=vecinos
 
@@ -90,13 +88,6 @@ class Usuario():
                 if (self.id not in vecinos):
                     vecinos.append(self.id)
                     usuarios[i].vecinos=vecinos
-
-
-    def compruebaVecinos(self, vecinos):
-        for i in range(len(vecinos)):
-            if (self.id==vecinos[i]):
-                return True # Esta en la lista de vecinos 
-        return False # No esta en la lista de vecinos 
 
     def compruebaGrupo(self, usuarios,vecino): #Comprueba si son del mismo grupo
         for i in range(len(usuarios)):
