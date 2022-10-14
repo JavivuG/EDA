@@ -54,48 +54,46 @@ class Usuario():
                     
         self.vecinos=vecinos
 
-    # Realiza una copia de los vecinos de un usuario
-    def copiaVecinos(self):
-        copiaVecinos=[]
-        for i in range(len(self.vecinos)):
-            copiaVecinos.append(self.vecinos[i])
-        return copiaVecinos
 
     def generaMensajes(self,usuarios,vecinos, vecinosCambio): # Genero los mensajes dependiendo comparando las listas de vecinos antes y despues del movimiento
         mensajes=[]
         for i in range(len(vecinos)): # Recorro la lista de vecinos antes del moviento
-            if ((vecinos[i] not in vecinosCambio)): # En el caso de que se haya salido de la zona cercana del usuario
+            if ((vecinos[i] not in vecinosCambio)): # Si antes estaba y ya no entonces se ha ido
                 mensajes.append(self.id+"-"+vecinos[i])
                 mensajes.append(vecinos[i]+"-"+self.id)
-                self.quitarVecino(usuarios,vecinos[i])
+                #self.quitarVecino(usuarios,vecinos[i]) # NO FUNCION
+
         for i in range(len(vecinosCambio)): # Recorro la lista de vecinos despues del moviento
             if ((vecinosCambio[i] not in vecinos)): # Se ha metido en la zona cercana
-
                 if (self.compruebaGrupo(usuarios, vecinosCambio[i]) ): # Mismo grupo
                     mensajes.append(self.id+"+="+vecinosCambio[i])
                     mensajes.append(vecinosCambio[i]+"+="+self.id)
                 else: # Distinto grupo
                     mensajes.append(self.id+"+/"+vecinosCambio[i])
                     mensajes.append(vecinosCambio[i]+"+/"+self.id)
-                self.addVecino(usuarios, vecinosCambio[i])
+                #self.addVecino(usuarios, vecinosCambio[i]) # NO FUNCIONA
         mensajes.append("---") 
         return mensajes
 
     def quitarVecino(self, usuarios, vecino):
-        usuariosId=[]
-        for i in range(len(usuarios)):
-            usuariosId.append(usuarios[i].id)
-
-        posicion=(usuariosId).index(vecino)
-        (usuarios[posicion].vecinos).remove(self.id)
+        for i in range(len(usuarios)): 
+            if (usuarios[i].id==vecino): # Selecciono el objeto usuario del vecino
+                vecinos=usuarios[i].vecinos # Lista de vecinos
+                if (self.compruebaVecinos(vecinos)):
+                    usuarios[i].vecinos=vecinos.remove(self.id)
 
     def addVecino(self, usuarios, vecino):
-        usuariosId=[]
         for i in range(len(usuarios)):
-            usuariosId.append(usuarios[i].id)
+            if (usuarios[i].id==vecino):
+                vecinos=usuarios[i].vecinos
+                if (not self.compruebaVecinos(vecinos)):
+                    usuarios[i].vecinos=vecinos.append(self.id)
 
-        posicion=(usuariosId).index(vecino)
-        (usuarios[posicion].vecinos).append(self.id)
+    def compruebaVecinos(self, vecinos):
+        for i in range(len(vecinos)):
+            if (self.id==vecinos[i]):
+                return True # Esta en la lista de vecinos 
+        return False # No esta en la lista de vecinos 
 
     def compruebaGrupo(self, usuarios,vecino): #Comprueba si son del mismo grupo
         for i in range(len(usuarios)):

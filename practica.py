@@ -45,9 +45,9 @@ if __name__=="__main__":
         comienzo=time.time()
 
         for i in range(len(usuarios)):
-            vecinos=Usuario.copiaVecinos(usuarios[i]) # Contiene los vecinos antes del movimiento 
+            vecinos=usuarios[i].vecinos # Contiene los vecinos antes del movimiento 
             Usuario.movimientos(usuarios[i],ficheroMovimientos, usuarios)
-            vecinosCambio=Usuario.copiaVecinos(usuarios[i]) # Contiene los vecinos despues del movimiento
+            vecinosCambio=usuarios[i].vecinos # Contiene los vecinos despues del movimiento
             
             # Compruebo diferencias entre vecinos despues de cambio y vecinos
             mensajes=Usuario.generaMensajes(usuarios[i], usuarios, vecinos, vecinosCambio)
