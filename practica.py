@@ -90,7 +90,7 @@ if __name__=="__main__":
         print("Procesando...")
         
         # Repito las medidas las veces que me indica
-        for iteracion in range(ciclos):
+        for iteracion in range(ciclos+1):
             comienzo=time.time()
 
             for i in range(len(usuarios)): # Recorro la lista con los usuarios
@@ -103,7 +103,7 @@ if __name__=="__main__":
                 print("%.5f" % diferenciaTiempo) # Muestro el tiempo tardado
                 sumaTiempo+=diferenciaTiempo 
 
-        promedio=sumaTiempo/ciclos 
+        promedio=sumaTiempo/(ciclos)
         print("Promedio: %.5f" % promedio) # Muestro el promedio de tiempo tardado
     else:
         print("OPCION ERRONEA")
