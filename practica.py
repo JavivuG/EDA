@@ -98,9 +98,10 @@ if __name__=="__main__":
                 Usuario.cambiarVecinos(usuarios[i],usuarios) # Actualizo los vecinos segun los movimientos generados
             final=time.time()
 
-            diferenciaTiempo=final-comienzo
-            print("%.5f" % diferenciaTiempo) # Muestro el tiempo tardado
-            sumaTiempo+=diferenciaTiempo 
+            if (iteracion>0):
+                diferenciaTiempo=final-comienzo
+                print("%.5f" % diferenciaTiempo) # Muestro el tiempo tardado
+                sumaTiempo+=diferenciaTiempo 
 
         promedio=sumaTiempo/ciclos 
         print("Promedio: %.5f" % promedio) # Muestro el promedio de tiempo tardado
