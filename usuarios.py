@@ -1,3 +1,9 @@
+# IMPORTANTE: Para el funcionamiento del programa se ejecuta el fichero practica.py
+# Trabajo realizado por:
+# Javier García González
+# Azael Bastardo Rodríguez
+# Grupo de Laboratorio: K2
+# Este fichero (usarios.py) contiene la clase Usuario y sus metodos
 import math
 import random
 
@@ -11,7 +17,7 @@ class Usuario():
             self.vecinos=vecinos
 
     def recogerUsuarios(ficheroInicial): # Extrae los datos de los usuarios en el punto inicial
-        fichero = open("./ficheros/"+ficheroInicial,'r')
+        fichero = open(ficheroInicial,'r')
         lineas = fichero.readlines()
         datos=[]
         for i in range(len(lineas)):
@@ -31,7 +37,7 @@ class Usuario():
 
     # Actualiza la posicion x e y de los usuarios segun el fichero de movimientos
     def movimientos(self,ficheroMovimientos,usuarios): 
-        fichero = open("./ficheros/"+ficheroMovimientos,'r')
+        fichero = open(ficheroMovimientos,'r')
         lineas = fichero.readlines()
 
         datos=[]
@@ -103,5 +109,3 @@ class Usuario():
 
         self.x=x
         self.y=y
-
-

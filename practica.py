@@ -1,3 +1,8 @@
+# Trabajo realizado por: 
+# Javier García González
+# Azael Bastardo Rodríguez
+# Grupo de Laboratorio: K2
+# Este es la parte ejecutable del programa, el fichero usuarios.py contiene la clase usuario y los metodos relacionados
 from usuarios import Usuario
 import time
 
@@ -26,7 +31,7 @@ def compruebaMensaje(mensaje,mensajesYaImpresos): # Compruebo que le mensaje se 
 
 def usuariosFicheroMoviemientos(ficheroMovimientos): # Devuelvo la lista de nombres de usuarios ordenados segun el fichero de movimientos
     usuarios=[]
-    fichero = open("./ficheros/"+ficheroMovimientos,'r')
+    fichero = open(ficheroMovimientos,'r')
     lineas = fichero.readlines()
     datos=[]
     for i in range(len(lineas)):
