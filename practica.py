@@ -3,6 +3,7 @@
 # Azael Bastardo Rodríguez
 # Grupo de Laboratorio: K2
 # Este es la parte ejecutable del programa, el fichero usuarios.py contiene la clase usuario y los metodos relacionados
+# IMPORTANTE: Se debe introducir el nombre completo de los ficheros cuando se solicitan, ejemplo: "inicial_10_0.3_.txt"
 from usuarios import Usuario
 import time
 
