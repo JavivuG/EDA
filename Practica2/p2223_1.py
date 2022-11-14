@@ -47,9 +47,8 @@ def lee_fichero_movs(fich):
         return [Movimiento.from_linea(lin) for lin in fich.read().splitlines() if lin != '']
 
 def buscar(usrs, ide):
-    for u in usrs:
-        if u.ide == ide:
-            return u
+    if(ide in usrs):
+        return usrs[ide]
     raise Exception("No existe ningún usuario con ese identificador")
 
 def vecinos(usrs, u):
@@ -73,6 +72,7 @@ def actualizar(u, vec_new, usrs, msgs):
             v.vecinos.remove(u.ide)
     # Asignar la nueva lista de vecinos a u
     u.vecinos = vec_new
+
     
 def algoritmo(usrs, movs):
     msgs = []
@@ -82,7 +82,7 @@ def algoritmo(usrs, movs):
         # Mover a su nueva posición
         u.mover(mov)
         # Encontrar la lista de vecinos actuales
-        vecs = vecinos(usrs, u)
+        vecs = vecinos(usrs.values(), u)
         # Genera mensajes y actualiza vecinos
         actualizar(u, vecs, usrs, msgs)
         msgs.append("---")
@@ -95,7 +95,12 @@ def main():
     n = int(trozos[1])
     d = float(trozos[2])
     print(f"Parámetros: {n} {d:.1f}")
-    usrs = set(lee_fichero_ini(fich_ini))
+    usrs = lee_fichero_ini(fich_ini)
+
+    dictUsr={}
+    for usr in usrs:
+        dictUsr.update({usr.ide:usr})
+
     modo = input("Modo [D]epuración o [M]edición? ").upper()
     if(modo.startswith('D')):
         # Modo Depuración
@@ -105,7 +110,7 @@ def main():
         movs = lee_fichero_movs(fich_mov)
         print("Procesando..")
         t1 = time()
-        msgs = algoritmo(usrs, movs)
+        msgs = algoritmo(dictUsr, movs)
         t2 = time()
         print(f"Tiempo: {t2-t1:.6f} seg.")
         # Se salvan los mensajes a un fichero en vez de mostrarlos por pantalla
@@ -114,13 +119,13 @@ def main():
     else:
         # Modo Medición
         nc = int(input("Número de ciclos: "))
-        movs = [Movimiento.from_usuario(usr) for usr in usrs]
+        movs = [Movimiento.from_usuario(usr) for usr in dictUsr]
         st = 0
         for i in range(nc):
             for mov in movs:
                 mov.asigna_azar()
             t1 = time()
-            algoritmo(usrs, movs)
+            algoritmo(dictUsr, movs)
             t2 = time()
             print(f"{t2-t1:.5f}")
             st += t2-t1
