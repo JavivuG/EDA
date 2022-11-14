@@ -95,7 +95,7 @@ def main():
     n = int(trozos[1])
     d = float(trozos[2])
     print(f"Parámetros: {n} {d:.1f}")
-    usrs = lee_fichero_ini(fich_ini)
+    usrs = set(lee_fichero_ini(fich_ini))
     modo = input("Modo [D]epuración o [M]edición? ").upper()
     if(modo.startswith('D')):
         # Modo Depuración
