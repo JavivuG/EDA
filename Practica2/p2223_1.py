@@ -1,3 +1,4 @@
+from arbolKd import kdtree
 from time import time
 from random import random
 
@@ -76,6 +77,11 @@ def actualizar(u, vec_new, usrs, msgs):
     
 def algoritmo(usrs, movs):
     msgs = []
+    listaCoordenadas=[]
+    for usr in usrs:
+        listaCoordenadas.append((usr.x,usr.y))
+    tree=kdtree(listaCoordenadas)
+
     for mov in movs:
         # Encontrar usuario con ese id
         u = buscar(usrs, mov.ide)
