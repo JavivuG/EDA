@@ -1,9 +1,10 @@
-from arbolKd import kdtree
+import Arbol
 from time import time
 from random import random
 
 RZC = 2.0       # Radio de la Zona de Control
 RZC2 = RZC*RZC
+
 
 class Usuario:
     def __init__(self, lin):
@@ -52,8 +53,11 @@ def buscar(usrs, ide):
         return usrs[ide]
     raise Exception("No existe ningún usuario con ese identificador")
 
-def vecinos(usrs, u):
-    return [v.ide for v in usrs if v != u and u.en_zc(v)]
+def vecinos(u, arbol):
+    vecs=[]
+    arbol.query_radius(u.x,u.y,2,vecs)
+    vecs.pop(0)
+    return vecs 
 
 def actualizar(u, vec_new, usrs, msgs):
     vec_old = u.vecinos
@@ -74,23 +78,47 @@ def actualizar(u, vec_new, usrs, msgs):
     # Asignar la nueva lista de vecinos a u
     u.vecinos = vec_new
 
-    
-def algoritmo(usrs, movs):
-    msgs = []
-    listaCoordenadas=[]
+def maximoX(usrs):
+    maximo=0
     for usr in usrs:
-        listaCoordenadas.append((usr.x,usr.y))
-    tree=kdtree(listaCoordenadas)
+        if (usr.x>maximo):
+            maximo=usr.x
+    return maximo
+
+def maximoY(usrs):
+    maximo=0
+    for usr in usrs:
+        if (usr.y>maximo):
+            maximo=usr.y
+    return maximo
+    
+def algoritmo(dictUsrs, movs):
+    msgs = []
+
+    altura=maximoY(dictUsrs.values())+1
+    anchura=maximoX(dictUsrs.values())+1
+
+    rectangulo=Arbol.Rect(altura/2,anchura/2,altura,anchura)
+    arbol=Arbol.QuadTree(rectangulo)
+
+    for usr in dictUsrs.values():
+        arbol.insertar(Arbol.Point(usr.x,usr.y,usr.ide))
 
     for mov in movs:
         # Encontrar usuario con ese id
-        u = buscar(usrs, mov.ide)
+        u = buscar(dictUsrs, mov.ide)
+        
+        #
+        # Aqui se deberia eliminar el punto del arbol
+        #
+
         # Mover a su nueva posición
         u.mover(mov)
+        arbol.insertar(Arbol.Point(u.x,u.y,u.ide))
         # Encontrar la lista de vecinos actuales
-        vecs = vecinos(usrs.values(), u)
+        vecs = vecinos(u, arbol)
         # Genera mensajes y actualiza vecinos
-        actualizar(u, vecs, usrs, msgs)
+        actualizar(u, vecs, dictUsrs, msgs)
         msgs.append("---")
     return msgs
 
