@@ -55,8 +55,7 @@ def buscar(usrs, ide):
 
 def vecinos(u, arbol):
     vecs=[]
-    arbol.query_radius(u.x,u.y,2,vecs)
-    vecs.pop(0)
+    arbol.query_radius(u.x,u.y,RZC,vecs,u)
     return vecs 
 
 def actualizar(u, vec_new, usrs, msgs):
@@ -104,22 +103,26 @@ def algoritmo(dictUsrs, movs):
     for usr in dictUsrs.values():
         arbol.insertar(Arbol.Point(usr.x,usr.y,usr.ide))
 
+    u = buscar(dictUsrs, "LOLI0493")
+    print(u.vecinos)
+
     for mov in movs:
         # Encontrar usuario con ese id
         u = buscar(dictUsrs, mov.ide)
         
-        #
-        # Aqui se deberia eliminar el punto del arbol
-        #
+        arbol.cambiaMovido(u)
 
         # Mover a su nueva posición
         u.mover(mov)
+
         arbol.insertar(Arbol.Point(u.x,u.y,u.ide))
         # Encontrar la lista de vecinos actuales
         vecs = vecinos(u, arbol)
         # Genera mensajes y actualiza vecinos
         actualizar(u, vecs, dictUsrs, msgs)
         msgs.append("---")
+    
+
     return msgs
 
 def main():

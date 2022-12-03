@@ -8,9 +8,10 @@ class Point:
 
     """
 
-    def __init__(self, x, y, usr=None):
+    def __init__(self, x, y, usr=None, movido=False):
         self.x, self.y = x, y
         self.usr = usr
+        self.movido=movido
 
     def distancia_a(self, other):
         other_x, other_y = other.x, other.y
@@ -108,7 +109,7 @@ class QuadTree:
         return found_points
 
 
-    def query_circle(self, boundary, centro1, centro2, radius, found_points):
+    def query_circle(self, boundary, centro1, centro2, radius, found_points, usr):
         """Find the points in the quadtree that lie within radius of centre.
 
         boundary is a Rect object (a square) that bounds the search circle.
@@ -126,23 +127,54 @@ class QuadTree:
         for point in self.points:
             centre=Point(centro1,centro2)
             if (boundary.contains(point) and point.distancia_a(centre) <= radius):
-                found_points.append(point.usr)
+                if (not point.movido):
+                    if (usr.ide != point.usr):
+                        found_points.append(point.usr)
 
         # Recurse the search into this node's children.
         if self.dividido:
-            self.noroeste.query_circle(boundary, centro1, centro2, radius, found_points)
-            self.noreste.query_circle(boundary, centro1,centro2, radius, found_points)
-            self.sureste.query_circle(boundary, centro1,centro2, radius, found_points)
-            self.suroeste.query_circle(boundary, centro1,centro2, radius, found_points)
+            self.noroeste.query_circle(boundary, centro1, centro2, radius, found_points,usr)
+            self.noreste.query_circle(boundary, centro1,centro2, radius, found_points, usr)
+            self.sureste.query_circle(boundary, centro1,centro2, radius, found_points, usr)
+            self.suroeste.query_circle(boundary, centro1,centro2, radius, found_points, usr)
         return found_points
 
-    def query_radius(self, centro1, centro2, radius, found_points):
+    def query_radius(self, centro1, centro2, radius, found_points, usr):
         """Find the points in the quadtree that lie within radius of centre."""
 
         # First find the square that bounds the search circle as a Rect object.
         boundary = Rect(centro1, centro2, 2*radius, 2*radius)
-        return self.query_circle(boundary, centro1,centro2, radius, found_points)
+        return self.query_circle(boundary, centro1,centro2, radius, found_points, usr)
 
+    def query_circle2(self, boundary, centro1, centro2, radius):
+
+        if not self.boundary.intersects(boundary):
+            # If the domain of this node does not intersect the search
+            # region, we don't need to look in it for points.
+            return False
+
+        # Search this node's points to see if they lie within boundary
+        # and also lie within a circle of given radius around the centre point.
+        for point in self.points:
+            centre=Point(centro1,centro2)
+            if (boundary.contains(point) and point.distancia_a(centre) <= radius):
+                print(point.usr)
+                self.points.remove(point)
+
+        # Recurse the search into this node's children.
+        if self.dividido:
+            self.noroeste.query_circle2(boundary, centro1, centro2, radius)
+            self.noreste.query_circle2(boundary, centro1,centro2, radius)
+            self.sureste.query_circle2(boundary, centro1,centro2, radius)
+            self.suroeste.query_circle2(boundary, centro1,centro2, radius)
+
+    def cambiaMovido(self,usr):
+        centro1=usr.x
+        centro2=usr.y
+        radius=0.001
+        boundary = Rect(centro1, centro2, 2*radius, 2*radius)
+
+        self.query_circle2(boundary, centro1,centro2, radius)
 
     def __len__(self):
         """Return the number of points in the quadtree."""
