@@ -1,6 +1,7 @@
-import Arbol
+import Arbol_de_0
 from time import time
 from random import random
+import math
 
 RZC = 2.0       # Radio de la Zona de Control
 RZC2 = RZC*RZC
@@ -54,16 +55,21 @@ def buscar(usrs, ide):
     raise Exception("No existe ningún usuario con ese identificador")
 
 def vecinos(u, arbol):
-    vecs=[]
-    arbol.query_radius(u.x,u.y,RZC,vecs,u)
+    centro=Arbol_de_0.Point(u.x,u.y)
+    rectangulo=Arbol_de_0.Rectangle(centro,4.0,4.0)
+    vecs=arbol.queryRadius(rectangulo,centro,u.ide)
     return vecs 
 
 def actualizar(u, vec_new, usrs, msgs):
     vec_old = u.vecinos
     # Añadir los nuevos vecinos
+    
     for ide in vec_new:
         if ide not in vec_old:
+        
             v = buscar(usrs, ide)
+            
+            
             msgs.append(u.mensaje(v, True))
             msgs.append(v.mensaje(u, True))
             v.vecinos.append(u.ide)
@@ -74,53 +80,70 @@ def actualizar(u, vec_new, usrs, msgs):
             msgs.append(u.mensaje(v, False))
             msgs.append(v.mensaje(u, False))
             v.vecinos.remove(u.ide)
+                        
     # Asignar la nueva lista de vecinos a u
     u.vecinos = vec_new
 
-def maximoX(usrs):
+def maximoX(usrs,movs):
     maximo=0
     for usr in usrs:
         if (usr.x>maximo):
             maximo=usr.x
+    for mov in movs:
+        if(mov.x>maximo):
+            maximo=mov.x
     return maximo
 
-def maximoY(usrs):
+def maximoY(usrs,movs):
     maximo=0
     for usr in usrs:
         if (usr.y>maximo):
             maximo=usr.y
+    for mov in movs:
+        if(mov.y>maximo):
+            maximo=mov.y
     return maximo
     
 def algoritmo(dictUsrs, movs):
     msgs = []
 
-    altura=maximoY(dictUsrs.values())+1
-    anchura=maximoX(dictUsrs.values())+1
-
-    rectangulo=Arbol.Rect(altura/2,anchura/2,altura,anchura)
-    arbol=Arbol.QuadTree(rectangulo)
+    altura=maximoY(dictUsrs.values(),movs)+0.001
+    anchura=maximoX(dictUsrs.values(),movs)+0.001
+    centro=Arbol_de_0.Point(anchura/2,altura/2)
+    rectangulo=Arbol_de_0.Rectangle(centro,anchura,altura)
+    arbol=Arbol_de_0.Quadtree(rectangulo)
 
     for usr in dictUsrs.values():
-        arbol.insertar(Arbol.Point(usr.x,usr.y,usr.ide))
+        arbol.insert(Arbol_de_0.Point(usr.x,usr.y,usr.ide))
+    
+    
+  
 
-    u = buscar(dictUsrs, "LOLI0493")
-    print(u.vecinos)
-
+    
+    
+    
+   
     for mov in movs:
+       
         # Encontrar usuario con ese id
         u = buscar(dictUsrs, mov.ide)
-        
-        arbol.cambiaMovido(u)
-
-        # Mover a su nueva posición
+        centroMovido=Arbol_de_0.Point(u.x,u.y)
+        rectanguloMovido=Arbol_de_0.Rectangle(centroMovido,0.1,0.1)
         u.mover(mov)
-
-        arbol.insertar(Arbol.Point(u.x,u.y,u.ide))
+        nuevoPunto=Arbol_de_0.Point(u.x,u.y)
+        arbol.cambiaMovido(rectanguloMovido,centroMovido,u.ide,nuevoPunto)
+        # Mover a su nueva posición
+        
+        arbol.insert(Arbol_de_0.Point(u.x,u.y,u.ide))
         # Encontrar la lista de vecinos actuales
         vecs = vecinos(u, arbol)
+        
+         
         # Genera mensajes y actualiza vecinos
         actualizar(u, vecs, dictUsrs, msgs)
+        
         msgs.append("---")
+   
     
 
     return msgs
