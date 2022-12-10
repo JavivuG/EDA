@@ -117,12 +117,6 @@ def algoritmo(dictUsrs, movs):
         arbol.insert(Arbol_de_0.Point(usr.x,usr.y,usr.ide))
     
     
-  
-
-    
-    contador=0
-    
-    
     for mov in movs:
        
         # Encontrar usuario con ese id
@@ -141,8 +135,6 @@ def algoritmo(dictUsrs, movs):
         actualizar(u, vecs, dictUsrs, msgs)
         
         msgs.append("---")
-   
-    print(contador)
 
     return msgs
 
