@@ -116,20 +116,13 @@ class Quadtree:
    
             
     def cambiaMovido(self,punto,movido):
-        found_points = []
         if not self.boundary.containsPoint(punto):
-            return []
+            return False
             
         for point in self.points:
             if(point.ide==punto.ide):
-                if (self.boundary.containsPoint(point)):
-                    point.x=movido.x
-                    point.y=movido.y
-
-                    return False
-                else:
-                    point.movido=True
-                    return True
+                point.movido=True
+                return False
                 
         if self.divided:
             self.nw.cambiaMovido(punto, movido)
@@ -137,7 +130,7 @@ class Quadtree:
             self.sw.cambiaMovido(punto, movido)
             self.se.cambiaMovido(punto, movido)
             
-        return found_points
+        return False
         
         
     

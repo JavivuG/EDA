@@ -123,10 +123,9 @@ def algoritmo(dictUsrs, movs):
         u = buscar(dictUsrs, mov.ide)
         puntoOriginal=Arbol_de_0.Point(u.x,u.y,u.ide)
         u.mover(mov)
-        estado=arbol.cambiaMovido(puntoOriginal, Arbol_de_0.Point(u.x,u.y,u.ide))
+        arbol.cambiaMovido(puntoOriginal, Arbol_de_0.Point(u.x,u.y,u.ide))
         # Mover a su nueva posición
-        if (estado):
-            arbol.insert(Arbol_de_0.Point(u.x,u.y,u.ide))
+        arbol.insert(Arbol_de_0.Point(u.x,u.y,u.ide))
         # Encontrar la lista de vecinos actuales
         vecs = vecinos(u, arbol)
         
