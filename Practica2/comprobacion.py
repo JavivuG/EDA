@@ -9,7 +9,7 @@ def lee_fichero_movs(fichOriginal, fich):
         if (modificado[i] not in original):
             print(i+1)
             print(modificado[i])
-            
+            break
         contador=i
     print(contador)
 

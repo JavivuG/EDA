@@ -120,21 +120,19 @@ def algoritmo(dictUsrs, movs):
   
 
     
+    contador=0
     
     
-   
     for mov in movs:
        
         # Encontrar usuario con ese id
         u = buscar(dictUsrs, mov.ide)
-        centroMovido=Arbol_de_0.Point(u.x,u.y)
-        rectanguloMovido=Arbol_de_0.Rectangle(centroMovido,0.1,0.1)
+        puntoOriginal=Arbol_de_0.Point(u.x,u.y,u.ide)
         u.mover(mov)
-        nuevoPunto=Arbol_de_0.Point(u.x,u.y)
-        arbol.cambiaMovido(rectanguloMovido,centroMovido,u.ide,nuevoPunto)
+        estado=arbol.cambiaMovido(puntoOriginal, Arbol_de_0.Point(u.x,u.y,u.ide))
         # Mover a su nueva posición
-        
-        arbol.insert(Arbol_de_0.Point(u.x,u.y,u.ide))
+        if (estado):
+            arbol.insert(Arbol_de_0.Point(u.x,u.y,u.ide))
         # Encontrar la lista de vecinos actuales
         vecs = vecinos(u, arbol)
         
@@ -144,7 +142,7 @@ def algoritmo(dictUsrs, movs):
         
         msgs.append("---")
    
-    
+    print(contador)
 
     return msgs
 
