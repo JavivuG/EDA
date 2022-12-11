@@ -1,3 +1,13 @@
+
+"""
+    Autores:
+    Javier García González
+    Azael Bastardo Rodríguez
+    Subgrupo: k2
+
+"""
+
+
 import Arbol_de_0
 from time import time
 from random import random
@@ -54,10 +64,10 @@ def buscar(usrs, ide):
         return usrs[ide]
     raise Exception("No existe ningún usuario con ese identificador")
 
-def vecinos(u, arbol):
-    centro=Arbol_de_0.Point(u.x,u.y)
-    rectangulo=Arbol_de_0.Rectangle(centro,4.0,4.0)
-    vecs=arbol.queryRadius(rectangulo,centro,u.ide)
+def vecinos(u, arbol): #con esta funcion obtenemos los vecinos actuales de un usuario determinado
+    centro=Arbol_de_0.Punto(u.x,u.y) #definimos el punto respecto al cual queremos calcular la distancia
+    rectangulo=Arbol_de_0.Rectangulo(centro,RZC,RZC) #definimos la region en la que queremos buscar
+    vecs=arbol.buscar_en_un_radio(rectangulo,centro,u.ide,RZC)
     return vecs 
 
 def actualizar(u, vec_new, usrs, msgs):
@@ -68,14 +78,13 @@ def actualizar(u, vec_new, usrs, msgs):
         if ide not in vec_old:
         
             v = buscar(usrs, ide)
-            
-            
             msgs.append(u.mensaje(v, True))
             msgs.append(v.mensaje(u, True))
             v.vecinos.append(u.ide)
     # Eliminar los que ya no son vecinos
     for ide in vec_old:
         if ide not in vec_new:
+       
             v = buscar(usrs, ide)
             msgs.append(u.mensaje(v, False))
             msgs.append(v.mensaje(u, False))
@@ -84,7 +93,7 @@ def actualizar(u, vec_new, usrs, msgs):
     # Asignar la nueva lista de vecinos a u
     u.vecinos = vec_new
 
-def maximoX(usrs,movs):
+def maximoX(usrs,movs): #Calculamos el valor maximo que puede tener la x para saber los limites del Quadtree
     maximo=0
     for usr in usrs:
         if (usr.x>maximo):
@@ -94,7 +103,7 @@ def maximoX(usrs,movs):
             maximo=mov.x
     return maximo
 
-def maximoY(usrs,movs):
+def maximoY(usrs,movs): #Calculamos el valor maximo que puede tener la y para saber los limites del Quadtree
     maximo=0
     for usr in usrs:
         if (usr.y>maximo):
@@ -106,26 +115,38 @@ def maximoY(usrs,movs):
     
 def algoritmo(dictUsrs, movs):
     msgs = []
-
-    altura=maximoY(dictUsrs.values(),movs)+0.001
-    anchura=maximoX(dictUsrs.values(),movs)+0.001
-    centro=Arbol_de_0.Point(anchura/2,altura/2)
-    rectangulo=Arbol_de_0.Rectangle(centro,anchura,altura)
+    #Definimos el Quadtree 
+    altura=maximoY(dictUsrs.values(),movs)+1.5
+    anchura=maximoX(dictUsrs.values(),movs)+1.5
+    centro=Arbol_de_0.Punto(anchura/2,altura/2)
+    rectangulo=Arbol_de_0.Rectangulo(centro,anchura,altura)
     arbol=Arbol_de_0.Quadtree(rectangulo)
 
     for usr in dictUsrs.values():
-        arbol.insert(Arbol_de_0.Point(usr.x,usr.y,usr.ide))
+        #Insertamos los usuarios en el Quadtree
+        arbol.insertar(Arbol_de_0.Punto(usr.x,usr.y,usr.ide))
     
     
+  
+
+    
+    
+    
+   
     for mov in movs:
        
         # Encontrar usuario con ese id
         u = buscar(dictUsrs, mov.ide)
-        puntoOriginal=Arbol_de_0.Point(u.x,u.y,u.ide)
+        #Creamos el punto y la region para buscar ese usuario
+        centroMovido=Arbol_de_0.Punto(u.x,u.y)
+        rectanguloMovido=Arbol_de_0.Rectangulo(centroMovido,0.1,0.1)
+        
+        #Eliminamos el usuario del Quadtree con las coordenadas originales
+        arbol.eliminar_punto(rectanguloMovido,centroMovido,u.ide)
+        #Actualizamos las coordenadas del usuario
         u.mover(mov)
-        arbol.cambiaMovido(puntoOriginal, Arbol_de_0.Point(u.x,u.y,u.ide))
-        # Mover a su nueva posición
-        arbol.insert(Arbol_de_0.Point(u.x,u.y,u.ide))
+        #Insertamos al usuario con las nuevas coordenadas
+        arbol.insertar(Arbol_de_0.Punto(u.x,u.y,u.ide))
         # Encontrar la lista de vecinos actuales
         vecs = vecinos(u, arbol)
         
@@ -134,6 +155,8 @@ def algoritmo(dictUsrs, movs):
         actualizar(u, vecs, dictUsrs, msgs)
         
         msgs.append("---")
+   
+    
 
     return msgs
 
