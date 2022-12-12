@@ -191,7 +191,7 @@ def main():
     else:
         # Modo Medición
         nc = int(input("Número de ciclos: "))
-        movs = [Movimiento.from_usuario(usr) for usr in dictUsr]
+        movs = [Movimiento.from_usuario(usr) for usr in dictUsr.values()]
         st = 0
         for i in range(nc):
             for mov in movs:
