@@ -1,29 +1,61 @@
-# Estructuras de Datos y Algoritmos
+<div align="center">
 
-Simulador en Python de usuarios que se mueven por un plano y avisan a sus vecinos cercanos. Hay una versión inicial con listas y otra optimizada con un Quadtree propio.
+# Simulador de vecindad con Quadtree
 
-> Asignatura **Estructuras de Datos y Algoritmos** · 2º curso, 1º cuatrimestre · curso 2022-2023 · Grado en Ingeniería Informática, Universidad de Valladolid.
+**Simulador en Python que sigue a miles de usuarios por un plano y avisa a sus vecinos cercanos, acelerado con un Quadtree implementado desde cero**
+
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Quadtree](https://img.shields.io/badge/Estructura-Quadtree-4B8BBE?style=for-the-badge)
+
+<sub>Estructuras de Datos y Algoritmos · Grado en Ingeniería Informática · Universidad de Valladolid · Curso 2022-2023</sub>
+
+</div>
+
+```mermaid
+flowchart LR
+    E[Fichero de estado] --> T[Quadtree<br/>capacidad 4 por nodo]
+    M[Fichero de movimientos] --> U{Para cada movimiento}
+    U -->|eliminar coordenadas antiguas| T
+    U -->|insertar coordenadas nuevas| T
+    T -->|búsqueda por radio 2.0<br/>solo en cuadrantes que intersecan| V[Vecinos actuales]
+    V --> Msg["Mensajes A-B, A+=B, A+/B"]
+```
+
+## En pocas palabras
+
+- **Reto:** recalcular, tras cada movimiento, qué usuarios están dentro de la zona de control de otro, con ficheros de 14 000 y 50 000 usuarios.
+- **Solución:** una primera versión con búsqueda lineal y una segunda con un Quadtree propio que limita la búsqueda a las regiones del plano que importan.
+- **Demuestra:** diseño de estructuras de datos espaciales, análisis de complejidad, medición de rendimiento y comparación con una versión de referencia.
+
+## Lo más destacado
+
+- **Quadtree escrito desde cero** (`Arbol_de_0.py`): clases `Punto`, `Rectangulo` y `Quadtree` con inserción recursiva, subdivisión en cuatro cuadrantes, eliminación y búsqueda por radio.
+- **Unos 0,65 s frente a 47 s** con `inicial_14000_1.0_.txt`, comparando la versión con Quadtree y la de búsqueda lineal (`sin_mejorar.py`) en una ejecución local no oficial.
+- **Actualización incremental:** cada usuario que se mueve se elimina del árbol con sus coordenadas antiguas y se reinserta con las nuevas, sin reconstruir el árbol.
+- **Acceso directo por identificador:** los usuarios se guardan en un diccionario, así que localizar al usuario de cada movimiento no exige recorrer una lista.
+- **Dos modos de uso:** depuración (`D`), que procesa los movimientos del fichero y genera los mensajes, y medición (`M`), que genera movimientos aleatorios y mide el tiempo de cada ciclo.
+- **Análisis de rendimiento entregados** en [`Practica1/ENTREGA/analisis.pdf`](Practica1/ENTREGA/analisis.pdf) y [`Practica2/ENTREGA/analisis.pdf`](Practica2/ENTREGA/analisis.pdf).
+
+## Competencias
+
+| Área | Qué se aplicó |
+|------|---------------|
+| Estructuras de datos | Quadtree, diccionarios indexados por identificador |
+| Algoritmia | Paso de búsqueda O(n) por usuario a búsqueda espacial por regiones |
+| Rendimiento | Modo de medición por ciclos y comparación con una versión de referencia |
+| Python | Solo biblioteca estándar (`math`, `random`, `time`) |
 
 ## Qué hace
 
 - Lee un fichero de estado inicial con cada usuario: identificador, coordenadas `x y`, grupo y lista de vecinos.
 - Aplica un fichero de movimientos y recalcula qué usuarios quedan dentro de la zona de control (radio 2.0).
 - Genera los mensajes de entrada y salida de vecinos: `A-B` cuando B sale de la zona, `A+=B` cuando entra uno del mismo grupo y `A+/B` cuando entra uno de otro grupo.
-- **Modo depuración (`D`):** procesa los movimientos del fichero, muestra el tiempo empleado y produce los mensajes.
-- **Modo medición (`M`):** genera movimientos aleatorios durante N ciclos y muestra el tiempo de cada ciclo y la media.
 
-## Tecnologías
-
-- Python 3 (solo biblioteca estándar: `math`, `random`, `time`)
-
-## Aspectos técnicos destacados
+## Arquitectura
 
 - **Práctica 1:** cada `Usuario` busca sus vecinos recorriendo a todos los demás y calculando la distancia euclídea, es decir, una búsqueda O(n) por usuario.
-- **Práctica 2:** `Arbol_de_0.py` implementa un **Quadtree** desde cero (clases `Punto`, `Rectangulo` y `Quadtree`, con capacidad 4 por nodo). Ofrece inserción recursiva, subdivisión en cuatro cuadrantes, eliminación de un punto y búsqueda por radio limitada a las regiones que intersecan con la zona de control.
-- En cada movimiento, el usuario se elimina del árbol con sus coordenadas antiguas y se vuelve a insertar con las nuevas. Los límites del árbol se calculan a partir del máximo de `x` e `y` entre el estado inicial y los movimientos.
-- Los usuarios se guardan en un diccionario indexado por identificador, así que encontrar el usuario de cada movimiento no exige recorrer una lista.
-- `sin_mejorar.py` conserva la versión de referencia con búsqueda lineal para comparar. En una ejecución local con `inicial_14000_1.0_.txt` (medición no oficial), la versión con Quadtree tardó unos 0,65 s y la de referencia unos 47 s.
-- Los análisis de rendimiento entregados están en [`Practica1/ENTREGA/analisis.pdf`](Practica1/ENTREGA/analisis.pdf) y [`Practica2/ENTREGA/analisis.pdf`](Practica2/ENTREGA/analisis.pdf).
+- **Práctica 2:** `Arbol_de_0.py` implementa el Quadtree con capacidad 4 por nodo. La búsqueda por radio solo baja a las regiones que intersecan con la zona de control. Los límites del árbol se calculan a partir del máximo de `x` e `y` entre el estado inicial y los movimientos.
+- `sin_mejorar.py` conserva la versión de referencia con búsqueda lineal para comparar.
 
 ## Estructura del repositorio
 
@@ -49,11 +81,14 @@ EDA/
 
 - Python 3.6 o superior (la práctica 2 usa f-strings)
 
-## Cómo compilar y ejecutar
+## Cómo ejecutarlo
 
 Los programas son interactivos: piden el nombre del fichero de estado, el modo y, en modo depuración, el fichero de movimientos. Los parámetros `n` y `d` se extraen del nombre del fichero (`inicial_<n>_<d>_.txt`), así que hay que conservar ese formato.
 
-Práctica 1 (se ejecuta desde su carpeta, porque importa `usuarios.py`):
+<details>
+<summary>Práctica 1 (búsqueda lineal)</summary>
+
+Se ejecuta desde su carpeta, porque importa `usuarios.py`:
 
 ```bash
 cd Practica1
@@ -63,7 +98,10 @@ python3 practica.py
 # Fichero de movimientos: ficheros/movs_10_0.4_.txt
 ```
 
-Práctica 2:
+</details>
+
+<details>
+<summary>Práctica 2 (Quadtree)</summary>
 
 ```bash
 cd Practica2
@@ -73,7 +111,16 @@ python3 p2223_1.py
 # Fichero de movimientos:        (en blanco se usa movs_14000_1.0_.txt)
 ```
 
-En modo depuración, la práctica 2 escribe los mensajes en `msgs_<n>_<d>_.txt`, en el directorio actual, y sobrescribe el que haya. Ambas ejecuciones se han probado con Python 3 sobre una copia del repositorio.
+En modo depuración escribe los mensajes en `msgs_<n>_<d>_.txt`, en el directorio actual, y sobrescribe el que haya.
+
+</details>
+
+Ambas ejecuciones se han probado con Python 3 sobre una copia del repositorio.
+
+## Estado y limitaciones
+
+- La comparación de 0,65 s frente a 47 s procede de una única ejecución local; no es una medición oficial.
+- Los programas son interactivos y no aceptan argumentos por línea de comandos.
 
 ## Autoría
 
@@ -81,4 +128,4 @@ Trabajo en pareja (subgrupo de laboratorio K2). Según la cabecera del código, 
 
 ---
 
-Forma parte de [UVa-Projects](https://github.com/JavivuG/UVa-Projects).
+<div align="center"><sub>Parte de <a href="https://github.com/JavivuG/UVa-Projects">UVa-Projects</a> · Javier García González</sub></div>
