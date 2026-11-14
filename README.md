@@ -11,15 +11,11 @@
 
 </div>
 
-```mermaid
-flowchart LR
-    E[Fichero de estado] --> T[Quadtree<br/>capacidad 4 por nodo]
-    M[Fichero de movimientos] --> U{Para cada movimiento}
-    U -->|eliminar coordenadas antiguas| T
-    U -->|insertar coordenadas nuevas| T
-    T -->|búsqueda por radio 2.0<br/>solo en cuadrantes que intersecan| V[Vecinos actuales]
-    V --> Msg["Mensajes A-B, A+=B, A+/B"]
-```
+<p align="center">
+  <img src="docs/screenshots/quadtree.svg" alt="Quadtree con 1000 usuarios: subdivisiones del plano, usuarios y búsqueda de vecinos por radio" width="640">
+  <br>
+  <sub>Quadtree real construido por el código con 1000 usuarios de <code>Practica1/ficheros/inicial_1000_1.0_.txt</code>.</sub>
+</p>
 
 ## En pocas palabras
 
@@ -53,6 +49,16 @@ flowchart LR
 
 ## Arquitectura
 
+```mermaid
+flowchart LR
+    E[Fichero de estado] --> T[Quadtree<br/>capacidad 4 por nodo]
+    M[Fichero de movimientos] --> U{Para cada movimiento}
+    U -->|eliminar coordenadas antiguas| T
+    U -->|insertar coordenadas nuevas| T
+    T -->|búsqueda por radio 2.0<br/>solo en cuadrantes que intersecan| V[Vecinos actuales]
+    V --> Msg["Mensajes A-B, A+=B, A+/B"]
+```
+
 - **Práctica 1:** cada `Usuario` busca sus vecinos recorriendo a todos los demás y calculando la distancia euclídea, es decir, una búsqueda O(n) por usuario.
 - **Práctica 2:** `Arbol_de_0.py` implementa el Quadtree con capacidad 4 por nodo. La búsqueda por radio solo baja a las regiones que intersecan con la zona de control. Los límites del árbol se calculan a partir del máximo de `x` e `y` entre el estado inicial y los movimientos.
 - `sin_mejorar.py` conserva la versión de referencia con búsqueda lineal para comparar.
@@ -61,6 +67,7 @@ flowchart LR
 
 ```
 EDA/
+├── docs/screenshots/     # visualización del Quadtree (quadtree.svg)
 ├── Practica1/
 │   ├── practica.py        # programa principal (modos D y M)
 │   ├── usuarios.py        # clase Usuario y búsqueda de vecinos
